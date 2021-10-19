@@ -16,8 +16,8 @@ class TabBarController: UITabBarController {
         configureTabBar()
         configureViewControllers()
     }
-    
-    func configureNavBar() {
+
+    private func configureNavBar() {
         UINavigationBar.appearance().barTintColor = .black
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.black]
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
@@ -28,18 +28,18 @@ class TabBarController: UITabBarController {
         UINavigationBar.appearance().tintColor = .black
     }
     
-    func configureTabBar() {
+    private func configureTabBar() {
         tabBar.backgroundColor = .white
         tabBar.tintColor = .black
     }
-    
-    func configureViewControllers() {
+
+    private func configureViewControllers() {
         let overviewNav = UINavigationController(rootViewController: OverviewVC())
         overviewNav.title = "Overview"
         overviewNav.tabBarItem.image = UIImage(systemName: "list.bullet.rectangle")
         overviewNav.navigationBar.barTintColor = .white
         
-        let byCountryNav = UINavigationController(rootViewController: ByCountryVC())
+        let byCountryNav = UINavigationController(rootViewController: StatisticsByCountryViewController())
         byCountryNav.title = "By country"
         byCountryNav.tabBarItem.image = UIImage(systemName: "globe")
         byCountryNav.navigationBar.barTintColor = .white

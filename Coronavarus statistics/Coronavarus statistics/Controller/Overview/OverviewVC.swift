@@ -7,7 +7,7 @@
 
 import UIKit
 
-class OverviewVC: UIViewController {
+final class OverviewVC: UIViewController {
     
     private let scrollView = UIScrollView()
     private let scrollContentView = UIView()
@@ -43,11 +43,11 @@ class OverviewVC: UIViewController {
         fetchOverviewData()
     }
 
-    @objc func updateButtonPressed() {
+    @objc private func updateButtonPressed() {
         fetchOverviewData()
     }
     
-    func layout() {
+    private func layout() {
         
         view.addSubview(scrollView)
         scrollView.pinToSafeAreaSuperview()
@@ -57,7 +57,7 @@ class OverviewVC: UIViewController {
         scrollContentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
     }
 
-    func configureSubviews() {
+    private func configureSubviews() {
         let vStackView = UIStackView(
             arrangedSubviews: [
                 newConfirmedInfoView,
@@ -106,12 +106,12 @@ class OverviewVC: UIViewController {
             }
         }
     }
-    
+
     func startLoadingAnimation() {
         view.addSubview(loadingOverlay)
         loadingOverlay.pinTo(view)
     }
-    
+
     func stopLoadingAnimation() {
         loadingOverlay.removeFromSuperview()
     }

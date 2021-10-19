@@ -7,9 +7,8 @@
 
 import UIKit
 
-class InfoView: UIView {
-    
-    // MARK: - Properties
+final class InfoView: UIView {
+
     private let captionLabel: UILabel = {
         let captionLabel = UILabel()
         captionLabel.text = "—"
@@ -25,9 +24,7 @@ class InfoView: UIView {
         
         return textLabel
     }()
-    
-    // MARK: - Lifecycle
-    
+
     init(frame: CGRect = .zero, caption: String) {
         super.init(frame: frame)
         captionLabel.text = caption
@@ -39,10 +36,8 @@ class InfoView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - Helpers
-    
-    func configureSubviews() {
+
+    private func configureSubviews() {
         addSubview(captionLabel)
         captionLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 6, paddingLeft: 6)
         addSubview(textLabel)

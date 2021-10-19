@@ -7,9 +7,6 @@
 
 import Foundation
 
-// serverData -> swiftData
-
-// MARK: - Response
 struct StatisticsResponse: Codable {
     let message: String
     let global: Global
@@ -22,7 +19,6 @@ struct StatisticsResponse: Codable {
     }
 }
 
-// MARK: - Country
 struct Country: Codable {
     let country, countryCode, slug: String
     let newConfirmed, totalConfirmed, newDeaths, totalDeaths: Int
@@ -47,7 +43,6 @@ extension Country {
     }
 }
 
-// MARK: - Global
 struct Global: Codable {
     let newConfirmed, totalConfirmed, newDeaths, totalDeaths: Int
     let newRecovered, totalRecovered: Int

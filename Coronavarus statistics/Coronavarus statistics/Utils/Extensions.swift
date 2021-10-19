@@ -126,8 +126,6 @@ extension UIView {
     }
 }
 
-// MARK: - UIButton
-
 extension UIButton {
     func setImageWithSize(size: CGFloat, systemImgName: String) {
         let largeConfig = UIImage.SymbolConfiguration(pointSize: size, weight: .bold, scale: .large)

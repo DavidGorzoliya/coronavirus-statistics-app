@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-class NetworkService {
+final class NetworkService {
     
     static let shared = NetworkService()
 
@@ -21,9 +21,8 @@ class NetworkService {
 }
 
 extension NetworkService {
-    
+
     private struct API_URLs {
         static let getOverviewStatistics = "http://api.covid19api.com/summary"
     }
-    
 }

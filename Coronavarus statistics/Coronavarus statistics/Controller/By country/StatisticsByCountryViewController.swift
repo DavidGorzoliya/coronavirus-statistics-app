@@ -6,54 +6,55 @@
 //
 import UIKit
 
-class ByCountryVC: UIViewController {
-    
-    // MARK: - Properties
-    
-    var tableView = UITableView()
-    var countries: [Country] = []
-    var sortedFirstLetters: [String] = []
-    var sections: [[Country]] = [[]]
-    
-    let loadingOverlay: UIView = {
-        let loadingOverlay = Utilities().loadingView()
-        
-        return loadingOverlay
-    }()
-    
-    // MARK: - Lifecycle
+final class StatisticsByCountryViewController: UIViewController {
+
+    private let tableView = UITableView()
+
+    private var countries: [Country] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.configureSections()
+                self.tableView.reloadData()
+                self.stopLoadingAnimation()
+            }
+        }
+    }
+    private var sortedFirstLettersOfCountries: [String] = []
+    private var sections: [[Country]] = [[]]
+
+    private let loadingOverlay: UIView = Utilities().loadingView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        prepare()
         fetchCountriesData()
+    }
+
+    @objc private func updateButtonPressed() {
+        fetchCountriesData()
+    }
+
+    private func prepare() {
         confifureTableView()
         configureNavBar()
         configureUI()
         configureSubviews()
     }
-    
-    // MARK: - Selectors
-    
-    @objc func updateButtonPressed() {
-        fetchCountriesData()
-    }
 
-    // MARK: - Helpers
-    func fetchCountriesData() {
+    private func fetchCountriesData() {
         startLoadingAnimation()
         NetworkService.shared.getOverviewStatistics { [weak self] response in
-            guard let res = response.value else { return }
-            self?.countries = res.countries
-            self?.configureSections()
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-                self?.stopLoadingAnimation()
+            switch response.result {
+            case .success(let response):
+                self?.countries = response.countries
+            case .failure(let error):
+                print(error)
             }
         }
     }
-    
-    func confifureTableView() {
+
+    private func confifureTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = 55
@@ -61,7 +62,7 @@ class ByCountryVC: UIViewController {
         tableView.sectionIndexColor = .black
     }
     
-    func configureNavBar() {
+    private func configureNavBar() {
         let button = UIButton()
         button.setImageWithSize(size: 20, systemImgName: "arrow.triangle.2.circlepath")
         button.addTarget(self, action: #selector(updateButtonPressed), for: .touchUpInside)
@@ -70,38 +71,43 @@ class ByCountryVC: UIViewController {
         navigationItem.title = "By country"
     }
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .white
     }
     
-    func configureSubviews() {
+    private func configureSubviews() {
         view.addSubview(tableView)
-        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
+        tableView.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor
+        )
     }
     
     func configureSections() {
         let firstLetters = countries.map { $0.titleFirstLetter }
         let uniqueFirstLetters = Array(Set(firstLetters))
 
-        sortedFirstLetters = uniqueFirstLetters.sorted()
-        sections = sortedFirstLetters.map { firstLetter in
+        sortedFirstLettersOfCountries = uniqueFirstLetters.sorted()
+        sections = sortedFirstLettersOfCountries.map { firstLetter in
             return countries
                 .filter { $0.titleFirstLetter == firstLetter }
                 .sorted { $0.country < $1.country }
         }
     }
     
-    func startLoadingAnimation() {
+    private func startLoadingAnimation() {
         view.addSubview(loadingOverlay)
         loadingOverlay.pinTo(view)
     }
     
-    func stopLoadingAnimation() {
+    private func stopLoadingAnimation() {
         loadingOverlay.removeFromSuperview()
     }
 }
 
-extension ByCountryVC: UITableViewDelegate, UITableViewDataSource {
+extension StatisticsByCountryViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
@@ -111,8 +117,8 @@ extension ByCountryVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard !sortedFirstLetters.isEmpty else { return "Loading.." }
-        return sortedFirstLetters[section]
+        guard !sortedFirstLettersOfCountries.isEmpty else { return "Loading.." }
+        return sortedFirstLettersOfCountries[section]
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -124,11 +130,11 @@ extension ByCountryVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        return sortedFirstLetters
+        return sortedFirstLettersOfCountries
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let countryDetailsVC = CountryDetailsVC(country: sections[indexPath.section][indexPath.row])
+        let countryDetailsVC = CountryDetailsViewController(country: sections[indexPath.section][indexPath.row])
         navigationController?.pushViewController(countryDetailsVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }

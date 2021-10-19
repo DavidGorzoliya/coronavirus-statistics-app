@@ -38,7 +38,7 @@ class Utilities {
         v.layer.addSublayer(loadingLayer)
         loadingOverlay.addSubview(v)
         v.center(inView: loadingOverlay)
-        
+
         return loadingOverlay
     }
 }

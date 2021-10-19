@@ -7,10 +7,8 @@
 
 import UIKit
 
-class CountryDetailsVC: UIViewController {
-    
-    // MARK: - Properties
-    
+final class CountryDetailsViewController: UIViewController {
+
     private var country: Country? {
         didSet {
             guard let country = country else { return }
@@ -58,8 +56,6 @@ class CountryDetailsVC: UIViewController {
         
         return totalRecoveredInfoView
     }()
-    
-    // MARK: - Lifecycle
 
     init(country: Country) {
         super.init(nibName: nil, bundle: nil)
@@ -81,10 +77,7 @@ class CountryDetailsVC: UIViewController {
         configureUI()
     }
 
-
-    // MARK: - Helpers
-    
-    func configureSubviews() {
+    private func configureSubviews() {
         let vStackView = UIStackView(arrangedSubviews: [newConfirmedInfoView, totalConfirmedInfoView, newDeathsInfoView, totalDeathsInfoView, newRecoveredInfoView, totalRecoveredInfoView])
         vStackView.axis = .vertical
         vStackView.distribution = .fillEqually
@@ -94,11 +87,11 @@ class CountryDetailsVC: UIViewController {
         vStackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 16)
     }
     
-    func configureNavBar() {
+    private func configureNavBar() {
         navigationItem.title = country?.country
     }
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .white
     }
 }
